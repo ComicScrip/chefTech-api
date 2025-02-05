@@ -30,10 +30,10 @@ app.get("/recipes", (c) => {
 
 app.post("/recipes", async (c) => {
 	const newRecipe = {
-		id: recipes.length,
+		id: recipes.length + 1,
 		...(await c.req.json()),
 	};
-
+	recipes.push(newRecipe);
 	return c.json(newRecipe);
 });
 
