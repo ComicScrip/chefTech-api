@@ -22,7 +22,7 @@ const recipes = [
 	},
 ];
 
-const app = new Hono().basePath("/");
+const app = new Hono().basePath("/api");
 
 app.get("/recipes", (c) => {
 	return c.json(recipes);
