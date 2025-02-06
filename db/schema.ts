@@ -5,4 +5,5 @@ export const recipes = sqliteTable("recipes", {
 	title: text().notNull().unique(),
 	timeMinutes: int().notNull(),
 	picture: text().notNull(),
+	description: text(),
 });
