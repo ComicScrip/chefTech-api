@@ -1,10 +1,13 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
+import { db } from "../db";
+import { recipes } from "../db/schema";
 
 export const config = {
 	runtime: "edge",
 };
 
+/*
 const recipes = [
 	{
 		id: 1,
@@ -21,20 +24,20 @@ const recipes = [
 		timeMinutes: 60,
 	},
 ];
+*/
 
 const app = new Hono().basePath("/api");
 
-app.get("/recipes", (c) => {
-	return c.json(recipes);
+app.get("/recipes", async (c) => {
+	return c.json(await db.select().from(recipes));
 });
 
 app.post("/recipes", async (c) => {
-	const newRecipe = {
-		id: recipes.length + 1,
+	const recipe: typeof recipes.$inferInsert = {
 		...(await c.req.json()),
 	};
-	recipes.push(newRecipe);
-	return c.json(newRecipe);
+	const withId = await db.insert(recipes).values(recipe).returning().get();
+	return c.json(withId);
 });
 
 export default handle(app);
